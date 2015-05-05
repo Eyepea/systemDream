@@ -39,4 +39,4 @@ from syslog import (LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR,
 # from . import id128 as _id128
 #
 
-from .functions import send
+from .helpers import send

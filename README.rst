@@ -1,6 +1,6 @@
-===============================
+===========
 systemDream
-===============================
+===========
 
 | |docs| |travis| |appveyor| |coveralls| |landscape| |scrutinizer|
 | |version| |downloads| |wheel| |supported-versions| |supported-implementations|
@@ -51,7 +51,7 @@ systemDream
 
 systemd bindings written in pure Python, to be easy to install in a pyvenv or virtualenv
 
-* Free software: BSD license
+* Free software: LGPL2 license
 
 Installation
 ============
@@ -63,7 +63,7 @@ Installation
 Documentation
 =============
 
-https://systemDream.readthedocs.org/
+https://systemdream.readthedocs.org/
 
 Development
 ===========
@@ -71,3 +71,4 @@ Development
 To run the all tests run::
 
     tox
+

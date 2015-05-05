@@ -4,6 +4,9 @@ import sys as _sys
 import datetime as _datetime
 import uuid as _uuid
 
+
+UNIX_SOCKET = '/run/systemd/journal/socket'
+
 # if _sys.version_info >= (3,):
 #     from ._reader import Monotonic
 # else:
@@ -86,3 +89,6 @@ def _make_line(field, value):
         return field + '=' + str(value)
     else:
         return field + '=' + value
+
+def sendv(*args):
+    print(UNIX_SOCKET)

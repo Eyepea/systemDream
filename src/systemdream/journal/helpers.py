@@ -7,7 +7,8 @@ import os as _os
 from syslog import (LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR,
                     LOG_WARNING, LOG_NOTICE, LOG_INFO, LOG_DEBUG)
 
-from .utils import _make_line
+from .utils import _make_line, sendv
+
 
 def send(MESSAGE, MESSAGE_ID=None,
          CODE_FILE=None, CODE_LINE=None, CODE_FUNC=None,

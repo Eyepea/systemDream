@@ -4,7 +4,7 @@ import sys as _sys
 import logging as _logging
 from syslog import (LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR,
                     LOG_WARNING, LOG_NOTICE, LOG_INFO, LOG_DEBUG)
-from .functions import send
+from .helpers import send
 from .utils import _valid_field_name
 
 
