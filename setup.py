@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 setup(
     name='systemdream',
     version='0.0.1',
-    license='BSD',
+    license='LGPL2',
     description='systemd bindings written in pure Python, to be easy to install in a pyvenv or virtualenv',
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
     author='Ludovic Gasc',
@@ -40,10 +40,9 @@ setup(
         # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)',
         'Operating System :: Unix',
         'Operating System :: POSIX',
-        'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
@@ -53,6 +52,7 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Utilities',
+        'Topic :: System :: Logging',
     ],
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
