@@ -1,4 +1,6 @@
 from __future__ import division
+import os
+import socket
 
 import sys as _sys
 import datetime as _datetime
@@ -6,6 +8,7 @@ import uuid as _uuid
 
 
 UNIX_SOCKET = '/run/systemd/journal/socket'
+_JOURNALD_SOCKET = None
 
 # if _sys.version_info >= (3,):
 #     from ._reader import Monotonic
@@ -91,4 +94,12 @@ def _make_line(field, value):
         return field + '=' + value
 
 def sendv(*args):
-    print(UNIX_SOCKET)
+    global _JOURNALD_SOCKET
+    if not os.path.exists(UNIX_SOCKET):
+        raise ValueError('This system doesn\'t have journald')
+
+    if not _JOURNALD_SOCKET:
+        _JOURNALD_SOCKET = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        _JOURNALD_SOCKET.connect(UNIX_SOCKET)
+    packet = ('\n'.join(args)+'\n').encode('utf-8')
+    _JOURNALD_SOCKET.sendall(packet)

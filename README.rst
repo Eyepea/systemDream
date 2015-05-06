@@ -49,7 +49,11 @@ systemDream
     :alt: Scrutinizer Status
     :target: https://scrutinizer-ci.com/g/Eyepea/systemDream/
 
-systemd bindings written in pure Python, to be easy to install in a pyvenv or virtualenv
+systemd bindings written in pure Python, based on C-bindings API of `python-systemd
+<http://www.freedesktop.org/software/systemd/python-systemd/>`_.
+The main goal of this library is to be very easy to install in a pyvenv or virtualenv, contrary to ``python-systemd``.
+
+For now, only ``systemd.journal`` has been ported, pull requests are welcome.
 
 * Free software: LGPL2 license
 
@@ -63,12 +67,16 @@ Installation
 Documentation
 =============
 
-https://systemdream.readthedocs.org/
+You can mainly follow the official ``python-systemd`` documentation: http://www.freedesktop.org/software/systemd/python-systemd/
 
-Development
-===========
+.. https://systemdream.readthedocs.org/
 
-To run the all tests run::
+..
 
-    tox
+    Development
+    ===========
+
+    To run the all tests run::
+
+        tox
 
