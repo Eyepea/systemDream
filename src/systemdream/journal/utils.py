@@ -88,10 +88,8 @@ def _valid_field_name(s):
 def _make_line(field, value):
     if isinstance(value, bytes):
         return field.encode('utf-8') + b'=' + value
-    elif isinstance(value, int):
-        return field + '=' + str(value)
     else:
-        return field + '=' + value
+        return '%s=%s' % (field, value)
 
 def sendv(*args):
     global _JOURNALD_SOCKET

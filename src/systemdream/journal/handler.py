@@ -4,6 +4,7 @@ import sys as _sys
 import logging as _logging
 from syslog import (LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR,
                     LOG_WARNING, LOG_NOTICE, LOG_INFO, LOG_DEBUG)
+import collections
 from .helpers import send
 from .utils import _valid_field_name
 
@@ -75,6 +76,10 @@ class JournalHandler(_logging.Handler):
         automatically. In addition, record.MESSAGE_ID will be
         used if present.
         """
+        if record.args and isinstance(record.args, collections.Mapping):
+            extra = dict(self._extra, **record.args)  # Merge metadata from handler and record
+        else:
+            extra = self._extra
         try:
             msg = self.format(record)
             pri = self.mapPriority(record.levelno)
@@ -87,7 +92,7 @@ class JournalHandler(_logging.Handler):
                  CODE_FILE=record.pathname,
                  CODE_LINE=record.lineno,
                  CODE_FUNC=record.funcName,
-                 **self._extra)
+                 **extra)
         except Exception:
             self.handleError(record)
 

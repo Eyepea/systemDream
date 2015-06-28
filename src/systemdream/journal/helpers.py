@@ -57,7 +57,7 @@ def send(MESSAGE, MESSAGE_ID=None,
     if CODE_FUNC is not None:
         args.append('CODE_FUNC=' + CODE_FUNC)
 
-    args.extend(_make_line(key, val) for key, val in kwargs.items())
+    args.extend(_make_line(key.upper(), val) for key, val in kwargs.items())
     return sendv(*args)
 
 def stream(identifier, priority=LOG_DEBUG, level_prefix=False):
