@@ -24,7 +24,7 @@ def read(*names, **kwargs):
 
 setup(
     name='systemdream',
-    version='0.0.1',
+    version='0.0.2',
     license='LGPL2',
     description='systemd bindings written in pure Python, to be easy to install in a pyvenv or virtualenv',
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
