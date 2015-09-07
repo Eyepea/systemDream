@@ -1,4 +1,6 @@
 from __future__ import division
+import os
+import socket
 
 import sys as _sys
 import logging as _logging
@@ -9,6 +11,38 @@ from .helpers import send
 from .utils import _valid_field_name
 
 DEFAULT_SOCKET = 'unix:/run/systemd/journal/socket'
+
+
+def _make_socket(sendto_socket):
+    if sendto_socket.startswith('unix:'):
+        sock_type, socket_address = sendto_socket.split(':', 1)
+        if not os.path.exists(socket_address):
+            raise ValueError('This system doesn\'t have journald')
+
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        sock.connect(socket_address)
+
+    elif sendto_socket.startswith('udp:'):
+        sock_type, socket_address = sendto_socket.split(':', 1)
+        host, port = socket_address.split(':', 1)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.connect((host, int(port)))
+
+    else:
+        if sendto_socket.startswith('tcp:'):
+            sock_type, socket_address = sendto_socket.split(':', 1)
+        else:
+            socket_address = sendto_socket
+
+        # tcp address with no port is a bad address, something must be wrong here...
+        if ':' not in sendto_socket:
+            raise ValueError('Invalid url: %s' % sendto_socket)
+
+        host, port = socket_address.split(':', 1)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((host, int(port)))
+
+    return sock
 
 
 class JournalHandler(_logging.Handler):
@@ -62,6 +96,8 @@ class JournalHandler(_logging.Handler):
     def __init__(self, level=_logging.NOTSET, sendto_socket=DEFAULT_SOCKET, **kwargs):
         super(JournalHandler, self).__init__(level)
 
+        self.socket = _make_socket(sendto_socket)
+
         for name in kwargs:
             if not _valid_field_name(name):
                 raise ValueError('Invalid field name: ' + name)
@@ -88,7 +124,7 @@ class JournalHandler(_logging.Handler):
             pri = self.mapPriority(record.levelno)
             mid = getattr(record, 'MESSAGE_ID', None)
             send(msg,
-                 SOCKET=self.sendto_socket,
+                 SOCKET=self.socket,
                  MESSAGE_ID=mid,
                  PRIORITY=format(pri),
                  LOGGER=record.name,

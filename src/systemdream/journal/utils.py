@@ -7,7 +7,6 @@ import datetime as _datetime
 import uuid as _uuid
 
 
-_JOURNALD_SOCKET = None
 
 # if _sys.version_info >= (3,):
 #     from ._reader import Monotonic
@@ -90,16 +89,6 @@ def _make_line(field, value):
     else:
         return '%s=%s' % (field, value)
 
-def sendv(socket_adr, *args):
-    global _JOURNALD_SOCKET
-
-    if socket_adr.startswith('unix:'):
-        _, socket_adr = socket_adr.split(':', 1)
-        if not os.path.exists(socket_adr):
-            raise ValueError('This system doesn\'t have journald')
-
-        if not _JOURNALD_SOCKET:
-            _JOURNALD_SOCKET = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-            _JOURNALD_SOCKET.connect(socket_adr)
-        packet = ('\n'.join(args)+'\n').encode('utf-8')
-        _JOURNALD_SOCKET.sendall(packet)
+def sendv(sock, *args):
+    packet = ('\n'.join(args)+'\n').encode('utf-8')
+    sock.sendall(packet)
