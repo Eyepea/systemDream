@@ -10,7 +10,7 @@ from syslog import (LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR,
 from .utils import _make_line, sendv
 
 
-def send(MESSAGE, MESSAGE_ID=None,
+def send(MESSAGE, SOCKET, MESSAGE_ID=None,
          CODE_FILE=None, CODE_LINE=None, CODE_FUNC=None,
          **kwargs):
     r"""Send a message to the journal.
@@ -58,7 +58,7 @@ def send(MESSAGE, MESSAGE_ID=None,
         args.append('CODE_FUNC=' + CODE_FUNC)
 
     args.extend(_make_line(key.upper(), val) for key, val in kwargs.items())
-    return sendv(*args)
+    return sendv(SOCKET, *args)
 
 def stream(identifier, priority=LOG_DEBUG, level_prefix=False):
     r"""Return a file object wrapping a stream to journal.

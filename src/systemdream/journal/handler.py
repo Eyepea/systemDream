@@ -8,6 +8,8 @@ import collections
 from .helpers import send
 from .utils import _valid_field_name
 
+DEFAULT_SOCKET = 'unix:/run/systemd/journal/socket'
+
 
 class JournalHandler(_logging.Handler):
     """Journal handler class for the Python logging framework.
@@ -57,7 +59,7 @@ class JournalHandler(_logging.Handler):
     to sys.argv[0]).
     """
 
-    def __init__(self, level=_logging.NOTSET, **kwargs):
+    def __init__(self, level=_logging.NOTSET, sendto_socket=DEFAULT_SOCKET, **kwargs):
         super(JournalHandler, self).__init__(level)
 
         for name in kwargs:
@@ -65,6 +67,7 @@ class JournalHandler(_logging.Handler):
                 raise ValueError('Invalid field name: ' + name)
         if 'SYSLOG_IDENTIFIER' not in kwargs:
             kwargs['SYSLOG_IDENTIFIER'] = _sys.argv[0]
+        self.sendto_socket = sendto_socket
         self._extra = kwargs
 
     def emit(self, record):
@@ -85,6 +88,7 @@ class JournalHandler(_logging.Handler):
             pri = self.mapPriority(record.levelno)
             mid = getattr(record, 'MESSAGE_ID', None)
             send(msg,
+                 SOCKET=self.sendto_socket,
                  MESSAGE_ID=mid,
                  PRIORITY=format(pri),
                  LOGGER=record.name,

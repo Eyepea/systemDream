@@ -7,7 +7,6 @@ import datetime as _datetime
 import uuid as _uuid
 
 
-UNIX_SOCKET = '/run/systemd/journal/socket'
 _JOURNALD_SOCKET = None
 
 # if _sys.version_info >= (3,):
@@ -91,13 +90,16 @@ def _make_line(field, value):
     else:
         return '%s=%s' % (field, value)
 
-def sendv(*args):
+def sendv(socket_adr, *args):
     global _JOURNALD_SOCKET
-    if not os.path.exists(UNIX_SOCKET):
-        raise ValueError('This system doesn\'t have journald')
 
-    if not _JOURNALD_SOCKET:
-        _JOURNALD_SOCKET = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        _JOURNALD_SOCKET.connect(UNIX_SOCKET)
-    packet = ('\n'.join(args)+'\n').encode('utf-8')
-    _JOURNALD_SOCKET.sendall(packet)
+    if socket_adr.startswith('unix:'):
+        _, socket_adr = socket_adr.split(':', 1)
+        if not os.path.exists(socket_adr):
+            raise ValueError('This system doesn\'t have journald')
+
+        if not _JOURNALD_SOCKET:
+            _JOURNALD_SOCKET = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+            _JOURNALD_SOCKET.connect(socket_adr)
+        packet = ('\n'.join(args)+'\n').encode('utf-8')
+        _JOURNALD_SOCKET.sendall(packet)
